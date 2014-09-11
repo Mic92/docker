@@ -26,6 +26,10 @@
 FROM ubuntu:14.04
 MAINTAINER Tianon Gravi <admwiggin@gmail.com> (@tianon)
 
+RUN	gpg --keyserver pgp.mit.edu --recv-keys "F6B0FC61"
+RUN	gpg --armor --export "F6B0FC61" | apt-key add -
+RUN	echo deb http://ppa.launchpad.net/zfs-native/stable/ubuntu trusty main > /etc/apt/sources.list.d/zfs.list
+
 # Packaged dependencies
 RUN apt-get update && apt-get install -y \
 	apparmor \
@@ -49,9 +53,9 @@ RUN apt-get update && apt-get install -y \
 	ruby1.9.1 \
 	ruby1.9.1-dev \
 	s3cmd=1.1.0* \
+	ubuntu-zfs \
+	libzfs-dev \
 	--no-install-recommends
-RUN	curl -o zfsonlinux_2~wheezy_all.deb http://archive.zfsonlinux.org/debian/pool/main/z/zfsonlinux/zfsonlinux_2%7Ewheezy_all.deb && dpkg -i zfsonlinux_2~wheezy_all.deb
-RUN	apt-get update && apt-get install -y libzfs-dev --no-install-recommends
 
 # Get lvm2 source for compiling statically
 RUN git clone -b v2_02_103 https://git.fedorahosted.org/git/lvm2.git /usr/local/lvm2
