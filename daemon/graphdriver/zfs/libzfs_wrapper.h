@@ -21,6 +21,8 @@
 	SYM3(int, zfs_mount, zfs_handle_t *, const char *, int) \
 	SYM3(int, zfs_unmount, zfs_handle_t *, const char *, int) \
 	SYM4(int, zfs_create, libzfs_handle_t *, const char *, zfs_type_t, nvlist_t *) \
+	SYM1(void, zpool_close, zpool_handle_t *) \
+	SYM2(zpool_handle_t *, zpool_open, libzfs_handle_t *, const char *)
 
 #define LIBNVPAIR_SYMS \
 	SYM3(int, nvlist_alloc, nvlist_t **, uint_t, int) \
