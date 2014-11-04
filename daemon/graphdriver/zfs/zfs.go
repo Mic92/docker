@@ -26,7 +26,7 @@ import (
 	"unsafe"
 
 	log "github.com/Sirupsen/logrus"
-	"github.com/docker/docker/archive"
+	"github.com/docker/docker/pkg/archive"
 	"github.com/docker/docker/daemon/graphdriver"
 	"github.com/docker/docker/pkg/parsers"
 )
@@ -622,11 +622,11 @@ func (d *Driver) Diff(id string) (archive.Archive, error) {
 	return nil, nil
 }
 
-func (d *Driver) ApplyDiff(id string, diff archive.ArchiveReader) error {
+func (d *Driver) ApplyDiff(id string, parent string, diff archive.ArchiveReader) (bytes int64, err error) {
 	log.Debugf("d->ApplyDiff(%s)", id)
 	// TODO
 	//return archive.Untar(diff, path.Join(a.rootPath(), "diff", id), nil)
-	return nil
+	return 0, nil
 }
 
 func (d *Driver) DiffSize(id string) (int64, error) {
