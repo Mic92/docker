@@ -169,7 +169,5 @@ RUN set -x \
 # Wrap all commands in the "docker-in-docker" script to allow nested containers
 ENTRYPOINT ["hack/dind"]
 
-RUN go get github.com/Mic92/go-zfs
-
 # Upload docker source
 COPY . /go/src/github.com/docker/docker
