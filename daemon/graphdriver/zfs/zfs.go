@@ -13,6 +13,7 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"strconv"
 	"strings"
 	"syscall"
 	"time"
@@ -176,7 +177,30 @@ func (d *Driver) Cleanup() error {
 }
 
 func (d *Driver) Status() [][2]string {
-	return nil
+	parts := strings.Split(d.dataset.Name, "/")
+	pool, err := zfs.GetZpool(parts[0])
+
+	if err != nil {
+		return [][2]string{
+			{"error while getting pool", fmt.Sprintf("%v", err)},
+		}
+	}
+	var quota string
+	if d.dataset.Quota == 0 {
+		quota = strconv.FormatUint(d.dataset.Quota, 10)
+	} else {
+		quota = "no"
+	}
+
+	return [][2]string{
+		{"Zpool", pool.Name},
+		{"Zpool Health", pool.Health},
+		{"Parent Dataset", d.dataset.Name},
+		{"Space Used By Parent", strconv.FormatUint(d.dataset.Used, 10)},
+		{"Space Available", strconv.FormatUint(d.dataset.Avail, 10)},
+		{"Parent Quota", quota},
+		{"Compression", d.dataset.Compression},
+	}
 }
 
 func cloneFilesystem(id, parent, mountpoint string) error {
