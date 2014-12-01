@@ -18,12 +18,12 @@ import (
 	"time"
 	"unsafe"
 
-	zfs "github.com/Mic92/go-zfs"
 	log "github.com/Sirupsen/logrus"
 	"github.com/docker/docker/daemon/graphdriver"
 	"github.com/docker/docker/pkg/archive"
 	"github.com/docker/docker/pkg/ioutils"
 	"github.com/docker/docker/pkg/parsers"
+	zfs "github.com/mistifyio/go-zfs"
 )
 
 type ZfsOptions struct {
