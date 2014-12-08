@@ -57,7 +57,7 @@ clone git github.com/Sirupsen/logrus v0.6.0
 
 clone git github.com/go-fsnotify/fsnotify v1.0.4
 
-clone git github.com/mistifyio/go-zfs dc0c0106835797
+clone git github.com/mistifyio/go-zfs f24c6bc9603ab5ad
 
 # get Go tip's archive/tar, for xattr support and improved performance
 # TODO after Go 1.4 drops, bump our minimum supported version and drop this vendored dep
