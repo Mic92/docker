@@ -273,7 +273,7 @@ func (d *Driver) Put(id string) {
 
 func (d *Driver) Exists(id string) bool {
 	_, err := zfs.GetDataset(d.ZfsPath(id))
-	return err != nil
+	return err == nil
 }
 
 func zfsChanges(dataset *zfs.Dataset) ([]archive.Change, error) {
