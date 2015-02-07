@@ -83,6 +83,14 @@ check_flags() {
 	done
 }
 
+check_command() {
+	if command -v "$1" >/dev/null 2>&1; then
+		wrap_good "$1 command" 'available'
+	else
+		wrap_bad "$1 command" 'missing'
+	fi
+}
+
 if [ ! -e "$CONFIG" ]; then
 	wrap_warning "warning: $CONFIG does not exist, searching other paths for kernel config..."
 	for tryConfig in "${possibleConfigs[@]}"; do
@@ -164,11 +172,8 @@ check_zfs() {
 	else
 		wrap_bad "  - /dev/zfs" 'missing'
 	fi
-	if command -v zfs >/dev/null 2>&1; then
-		wrap_good "  - zfs command" 'available'
-	else
-		wrap_bad "  - zfs command" 'missing'
-	fi
+	echo "  - $(check_command zfs)"
+	echo "  - $(check_command zpool)"
 }
 
 echo '- Storage Drivers:'
