@@ -267,8 +267,9 @@ func (d *Driver) Get(id, mountLabel string) (string, error) {
 	}
 }
 
-func (d *Driver) Put(id string) {
+func (d *Driver) Put(id string) error {
 	// FS is already mounted
+	return nil
 }
 
 func (d *Driver) Exists(id string) bool {
@@ -362,7 +363,7 @@ func (d *Driver) ApplyDiff(id, parent string, diff archive.ArchiveReader) (int64
 	if err != nil {
 		return -1, err
 	}
-	err = archive.ApplyLayer(dataset.Mountpoint, diff)
+	_, err = archive.ApplyLayer(dataset.Mountpoint, diff)
 	if err != nil {
 		return -1, err
 	}
