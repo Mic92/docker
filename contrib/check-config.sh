@@ -158,6 +158,19 @@ flags=(
 )
 check_flags "${flags[@]}"
 
+check_zfs() {
+	if [ -c /dev/zfs ]; then
+		wrap_good "  - /dev/zfs" 'present'
+	else
+		wrap_bad "  - /dev/zfs" 'missing'
+	fi
+	if command -v zfs >/dev/null 2>&1; then
+		wrap_good "  - zfs command" 'available'
+	else
+		wrap_bad "  - zfs command" 'missing'
+	fi
+}
+
 echo '- Storage Drivers:'
 {
 	echo '- "'$(wrap_color 'aufs' blue)'":'
@@ -175,6 +188,9 @@ echo '- Storage Drivers:'
 
 	echo '- "'$(wrap_color 'overlay' blue)'":'
 	check_flags OVERLAY_FS EXT4_FS_SECURITY EXT4_FS_POSIX_ACL | sed 's/^/  /'
+
+	echo '- "'$(wrap_color 'zfs' blue)'":'
+	check_zfs
 } | sed 's/^/  /'
 echo
 
