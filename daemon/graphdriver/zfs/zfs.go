@@ -275,7 +275,7 @@ func (d *Driver) Create(id string, parent string, mountLabel string, storageOpt 
 	}
 
 	dataset := zfs.Dataset{Name: d.zfsPath(id)}
-	if err := dataset.Destroy(zfs.DestroyRecursiveClones|zfs.DestroyForceUmount); err != nil {
+	if err := destroyDataset(dataset); err != nil {
 		return err
 	}
 
@@ -338,11 +338,34 @@ func setQuota(name string, quota string) error {
 func (d *Driver) Remove(id string) error {
 	name := d.zfsPath(id)
 	dataset := zfs.Dataset{Name: name}
-	err := dataset.Destroy(zfs.DestroyRecursive|zfs.DestroyForceUmount)
+	err := destroyDataset(dataset)
 	if err == nil {
 		d.Lock()
 		delete(d.filesystemsCache, name)
 		d.Unlock()
+	}
+	return err
+}
+
+func destroyDataset(dataset zfs.Dataset) error {
+	var err error
+	for i := 0; i < 3; i++ {
+		err = dataset.Destroy(zfs.DestroyRecursive|zfs.DestroyForceUmount)
+		if err == nil {
+			return nil
+		}
+
+		if zfsError, ok := err.(*zfs.Error); ok {
+			if !strings.HasSuffix(zfsError.Stderr, "dataset is busy\n") {
+				return err
+			}
+			// -EBUSY -> retry and hope it will become free
+		} else {
+			return err
+		}
+
+		logrus.Debugf(`[zfs] zfs destroy failed with: %v -> retry`, err)
+		time.Sleep(time.Duration(i) * time.Second)
 	}
 	return err
 }
