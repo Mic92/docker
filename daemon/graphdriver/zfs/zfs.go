@@ -275,7 +275,7 @@ func (d *Driver) Create(id string, parent string, mountLabel string, storageOpt 
 	}
 
 	dataset := zfs.Dataset{Name: d.zfsPath(id)}
-	if err := dataset.Destroy(zfs.DestroyRecursiveClones); err != nil {
+	if err := dataset.Destroy(zfs.DestroyRecursiveClones|zfs.DestroyForceUmount); err != nil {
 		return err
 	}
 
@@ -338,7 +338,7 @@ func setQuota(name string, quota string) error {
 func (d *Driver) Remove(id string) error {
 	name := d.zfsPath(id)
 	dataset := zfs.Dataset{Name: name}
-	err := dataset.Destroy(zfs.DestroyRecursive)
+	err := dataset.Destroy(zfs.DestroyRecursive|zfs.DestroyForceUmount)
 	if err == nil {
 		d.Lock()
 		delete(d.filesystemsCache, name)
